@@ -1,7 +1,13 @@
-/* database handling functionality will be here*/
+                    /* Database Handling Functionalities */
+
 #include "DBHandler.h"
 #include "server.h"
 
+/* 
+   print mysql errors. 
+   args - Mysql connection structure
+   return value- -1 if error executed  
+*/
 int finish_with_error(MYSQL * con)
 {
     slog("MYSQL ERROR");
@@ -10,6 +16,11 @@ int finish_with_error(MYSQL * con)
     return ERR;
 }
 
+/*
+    connect with the mysql database
+    args - username,password,database as strings
+    return value- Mysql connection structure
+*/
 MYSQL * connect_client(const char * user_name,const char * password,char *db_name)
 {
     MYSQL * con = mysql_init(NULL);
@@ -26,6 +37,12 @@ MYSQL * connect_client(const char * user_name,const char * password,char *db_nam
     slog("connect done");
     return con;
 }
+
+/*
+    create database
+    args - Mysql connection struct, database string
+    return value - 0 if successfull in database creation
+*/
 int create_db(MYSQL * con,char *DB_name)
 {
     char query[1024];
@@ -38,6 +55,11 @@ int create_db(MYSQL * con,char *DB_name)
     return OK;
 }
 
+/*
+    delete database
+    args - Mysql connection struct, database string
+    return value - 0 if successfull in database deletion
+*/
 int delete_db(MYSQL * con,char *database_name)
 {
     char query[1024];
@@ -50,6 +72,11 @@ int delete_db(MYSQL * con,char *database_name)
     return OK;
 }
 
+/*
+    create table 
+    args - Mysql connection struct, table string, column string pointer,no of columns
+    return value- 
+*/
 int create_table(MYSQL * con,char *table,char **col,int count)
 {
     char query[1024];
@@ -71,6 +98,11 @@ int create_table(MYSQL * con,char *table,char **col,int count)
     return;
 }
 
+/*
+    delete table 
+    args - Mysql connection struct, table string, 
+    return value- 
+*/
 int delete_table(MYSQL * con,char * tab_name)
 {
     char query[1024];
@@ -83,6 +115,11 @@ int delete_table(MYSQL * con,char * tab_name)
     return;
 }
 
+/*
+    add values into the table
+    args- Mysql connection struct, table string, message string pointer,no of values
+    return value - 
+*/
 void add_values(MYSQL *con, char *table, char **msg, int count)
 {
     char query[2048];
@@ -106,7 +143,11 @@ void add_values(MYSQL *con, char *table, char **msg, int count)
     return;
 }
 
-
+/*
+    create databbase user in mysql
+    args- Mysql conn struct, username string, password string
+    return value - 
+*/
 int create_database_user(MYSQL * con,char * usr_name,char* pwd)
 {
     char query[1024];
@@ -126,6 +167,11 @@ int create_database_user(MYSQL * con,char * usr_name,char* pwd)
     return;
 }
 
+/*
+    login with new user.
+    args- Mysql con struct, username string, password string
+    return value - 
+*/
 int login_with_new_user(MYSQL *con,char *username,char *pwd)
 {
     char database[512];

@@ -1,4 +1,3 @@
-/*header files will be included here*/
 #ifndef __SERVER__
 #define __SERVER__
 #include<string.h>

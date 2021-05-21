@@ -1,5 +1,8 @@
+		/*server init, interrupt handling,client thread creation,close connections*/
+
 #include "server.h"
 
+/*child interrupts handling*/
 void sigchld_handler(int sig)
 {
 	int s;
@@ -7,6 +10,10 @@ void sigchld_handler(int sig)
 	
 }
 
+/*	
+	operation on the client message 
+	converts the lower case data to upper case 
+*/
 void strupr(char *s)
 {
 	while(*s != '\0')
@@ -18,15 +25,21 @@ void strupr(char *s)
 	return;
 }
 
+/*Signal interrupts handling*/
 void sigint_handler(int sig)
 {
-	//13. shutdown listening socket
-	printf("Server socket shutdown");
+	/*shutdown listening socket*/
+	printf("Server socket shuting down");
 	shutdown(srv_fd,SHUT_RDWR);
 	printf("Server socket shutdown");
 	_exit(1);
 }
 
+/*
+server init function, 
+server socket is created, then address is assigned to the socket
+and listening is done
+*/
 int init_server()
 {
     int ret=0;
@@ -42,7 +55,7 @@ int init_server()
 	sa.sa_handler = sigchld_handler;
 	sigaction(SIGCHLD, &sa, NULL);
 
-	//1. create server socket
+	/* create server socket*/
 	srv_fd=socket(AF_INET,SOCK_STREAM,0);
 	if(srv_fd<0)
 	{
@@ -52,7 +65,7 @@ int init_server()
 	}
 	slog("server socket created");
 
-	//2. assign address to server socket
+	/*assign address to server socket*/
 	srv_addr.sin_family = AF_INET;
 	srv_addr.sin_port = htons(SERVER_PORT);
 	inet_aton(SERVER_IP,&srv_addr.sin_addr);
@@ -68,7 +81,7 @@ int init_server()
 	sprintf(str_tmp,"address given to server : IP = %s PORT = %d",SERVER_IP,SERVER_PORT);
 	slog(str_tmp);
 
-	//3. listen to server socket
+	/* listen to server socket*/
 	ret = listen(srv_fd,5);
     if(ret!=0)
     {
@@ -80,6 +93,7 @@ int init_server()
     return 0;
 }
 
+/*client thread creation*/
 void * client_thread(void * tmp)
 {
 	//printf("inside cli thread\n");
@@ -90,7 +104,7 @@ void * client_thread(void * tmp)
 	slog("mysql init successful");
 	while(1)
 	{		
-		//8. read data from client & display
+		/* read data from client & display*/
 		read(cli_fd,msg,sizeof(msg));
 		printf("Client : %s\n",msg);						
 		
@@ -98,7 +112,7 @@ void * client_thread(void * tmp)
 		strupr(msg);					
 		printf("Server : %s\n",msg);
 
-		//insert values in table customers
+		/*insert values in table customers*/
 		//strcpy(tmp,msg);
 		//strcpy(tmp + 1,str);
 		char *tmp[] = {msg,str};
@@ -107,7 +121,7 @@ void * client_thread(void * tmp)
 		add_values(con,"rajput",tmp,2);
 		slog("values inserted in table");
 
-		//9. write data to client
+		/* write data to client*/
 		//fgets(msg,sizeof(msg),stdin);
 		write(cli_fd,msg,strlen(msg)+1);
 		if(strcmp("EXIT",msg) == 0)
@@ -119,9 +133,11 @@ void * client_thread(void * tmp)
 		}
 	}
 	mysql_close(con);			
-	//12. close socket	
+	/* close socket*/	
 	return NULL;
 }
+
+/*close the server fd,log fd and mysql connection*/
 void close_all(void)
 {
 	MYSQL * con=NULL;

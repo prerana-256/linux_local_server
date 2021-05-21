@@ -1,4 +1,3 @@
-/*this includes all the header files*/
 #ifndef __log__
 #define __log__
 #include <stdio.h>

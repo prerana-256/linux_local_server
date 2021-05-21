@@ -5,15 +5,15 @@
 #include "log.h"
 #include "user_menu.h"
 
-
+/* Driver program */
 int main()
 {
-	pthread_t server_thread, u_menu;
+	pthread_t server_thread, u_menu;   
 
 	char str[2048], client_ip[1024];
 	int cli_fd , ret, client_port;
 	
-	ret=log_init();
+	ret=log_init();					
 	if(ret != 0)
 	{
 		slog("LOG INIT FAILED");
@@ -28,6 +28,8 @@ int main()
     scanf("%s",user_name);
     printf("Password : ");
     scanf("%s",password);
+	
+	/*authorize the client*/
 	if(connect_client(user_name, password, NULL) == ERR)
 	{
 		printf("User name or password is invalid\n");
@@ -43,11 +45,11 @@ int main()
 	}
 	slog("server init successfull....!!!!");
 	pthread_create(&u_menu,NULL,user_menu,NULL);
-	// init the database
+	
 	while(1)
 	{
 		slog("inside while loop");
-		//6. accept client connection
+		/* accept client connection */
 		struct sockaddr_in cli_addr;
 		socklen_t len=sizeof(cli_addr);
 		slog("Waiting for client connection...");

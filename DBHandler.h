@@ -1,4 +1,3 @@
-/*header files will be included here*/
 #ifndef __DBHandler__
 #define __DBHandler__
 #include<mysql/mysql.h>

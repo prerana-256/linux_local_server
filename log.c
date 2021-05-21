@@ -1,6 +1,10 @@
-/*this includes init function,message printing function and debugging function*/
+                        /* Log Init,Message printing,and Debugging */
 #include "log.h"
 
+/*
+    init the log file.
+    return 0 if success
+*/
 int log_init()
 {
     
@@ -10,11 +14,15 @@ int log_init()
         perror("log file not created:\n");
         return 1;
     }
-    printf("log init successful\n");    
+    //printf("log init successful\n");    
     return 0;
 }
 
-
+/*
+    write or append into the log file.
+    args- message string
+    return value - 
+*/
 void slog(char *str)
 {
     char cur_time[128],tmp_str[1024];
