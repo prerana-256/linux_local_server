@@ -5,7 +5,7 @@ COBJ = $(CSRC:.c=.o)
 
 CC=gcc
 CFLAGS=-m64 `mysql_config --cflags`
-LDFLAGS=`mysql_config --libs` -lpthread
+LDFLAGS=`mysql_config --libs` -lpthread -ljson-c
 
 all: $(TARGET).out
 
