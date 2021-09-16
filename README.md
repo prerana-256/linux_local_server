@@ -1,2 +1,2 @@
-# linux_server
-linux based server for embedded applications
+# linux_local_server
+linux based local server for embedded applications
